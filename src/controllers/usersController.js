@@ -73,6 +73,7 @@ class UsersController {
 
       const token = jwt.sign(
         { id: userFound._id, name: userFound.name, email: userFound.email },
+        // eslint-disable-next-line no-undef
         process.env.JWT_SECRET_KEY,
         { expiresIn: "1h" }
       );
