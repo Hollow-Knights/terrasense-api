@@ -11,5 +11,6 @@ routes.post("/login", UsersController.loginUser);
 //todo: add route to update user
 //todo: add route to delete user
 //todo: add route to get all users
+routes.get("/users", UsersController.getAllUsers);
 
 export default routes;

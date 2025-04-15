@@ -1,6 +1,7 @@
 import users from "../models/Users.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { UsersDomain } from "../domain/usersDomain.js";
 
 class UsersController {
   static async registerUser(req, res) {
@@ -9,9 +10,7 @@ class UsersController {
 
       const hashPasswordPromise = bcrypt.hash(userBody.password, 10);
 
-      const conflictUserPromise = users.findOne({
-        email: userBody.email,
-      });
+      const conflictUserPromise = UsersDomain.findUserByEmail(userBody.email);
 
       const [hashPassword, conflictUser] = await Promise.all([
         hashPasswordPromise,
@@ -28,13 +27,12 @@ class UsersController {
         });
       }
 
-      users.create({
-        name: userBody.name,
-        email: userBody.email,
+      const { password, ...user } = userBody;
+
+      UsersDomain.createUser({
+        ...user,
         password: hashPassword,
       });
-
-      const { password, ...user } = userBody;
 
       return res.status(201).json({
         message: "Usuário criado com sucesso",
@@ -91,6 +89,21 @@ class UsersController {
       console.error("an error occured at /login:", error);
       return res.status(500).json({
         message: "Erro ao fazer login",
+        error: error.message,
+      });
+    }
+  }
+
+  static async getAllUsers(req, res) {
+    try {
+      return res.status(200).json({
+        message: "Lista de usuários",
+        users: await UsersDomain.findAllUsers(),
+      });
+    } catch (error) {
+      console.error("an error occured at /users:", error);
+      return res.status(500).json({
+        message: "Erro ao listar usuários",
         error: error.message,
       });
     }
