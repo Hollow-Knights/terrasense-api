@@ -1,4 +1,3 @@
-import express from "express";
 import users from "./userRoutes.js";
 
 const routes = (app) => {
