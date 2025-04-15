@@ -1,10 +1,10 @@
-import express from "express"
-import users from "./userRoutes.js"
+import express from "express";
+import users from "./userRoutes.js";
 
 const routes = (app) => {
-  app.route("/").get((req, res) => res.status(200).send("TerraSense API"))
+  app.get("/", (req, res) => res.status(200).send("TerraSense API"));
 
-  app.use(express.json(), users)
-}
+  app.use(users);
+};
 
-export default routes
+export default routes;
