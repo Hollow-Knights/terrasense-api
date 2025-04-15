@@ -6,6 +6,7 @@ class UsersController {
   static async registerUser(req, res) {
     try {
       const userBody = req.body;
+
       const hashPasswordPromise = bcrypt.hash(userBody.password, 10);
 
       const conflictUserPromise = users.findOne({
@@ -33,11 +34,12 @@ class UsersController {
         password: hashPassword,
       });
 
+      const { password, ...user } = userBody;
+
       return res.status(201).json({
         message: "Usuário criado com sucesso",
         "Novo Usuário": {
-          name: userBody.name,
-          email: userBody.email,
+          ...user,
         },
       });
     } catch (error) {
