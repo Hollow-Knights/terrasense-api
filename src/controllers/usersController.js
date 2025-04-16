@@ -6,11 +6,12 @@ import { UsersDomain } from "../domain/usersDomain.js";
 class UsersController {
   static async registerUser(req, res) {
     try {
-      const userBody = req.body;
+      const {name, email, password} = req.body;
+      const user = {name, email}
 
-      const hashPasswordPromise = bcrypt.hash(userBody.password, 10);
+      const hashPasswordPromise = bcrypt.hash(password, 10);
 
-      const conflictUserPromise = UsersDomain.findUserByEmail(userBody.email);
+      const conflictUserPromise = UsersDomain.findUserByEmail(email);
 
       const [hashPassword, conflictUser] = await Promise.all([
         hashPasswordPromise,
@@ -27,10 +28,9 @@ class UsersController {
         });
       }
 
-      const { password, ...user } = userBody;
-
       UsersDomain.createUser({
-        ...user,
+        name,
+        email,
         password: hashPassword,
       });
 
