@@ -2,12 +2,17 @@ import users from "../models/Users.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { UsersDomain } from "../domain/usersDomain.js";
+import signupSchema from "../models/validationSchemas/signupSchema.js";
 
 class AuthController {
 
   static async registerUser(req, res) {
     try {
       const {name, email, password} = req.body;
+      const { error } = signupSchema.validate({name, email, password})
+      if(error) {
+        return res.status(404).json(error.message)
+      }
       const user = {name, email}
 
       const hashPasswordPromise = bcrypt.hash(password, 10);
