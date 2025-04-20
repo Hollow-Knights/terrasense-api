@@ -9,10 +9,6 @@ class AuthController {
   static async registerUser(req, res) {
     try {
       const {name, email, password} = req.body;
-      const { error } = signupSchema.validate({name, email, password})
-      if(error) {
-        return res.status(404).json(error.message)
-      }
       const user = {name, email}
 
       const hashPasswordPromise = bcrypt.hash(password, 10);
