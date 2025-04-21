@@ -1,7 +1,7 @@
 import express from "express"
 import dbConnect from "./config/dbConnection.js"
 import routes from "./routes/index.js"
-import cors from cors;
+import cors from 'cors';
 
 const connect = await dbConnect()
 
